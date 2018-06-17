@@ -33,6 +33,16 @@ using System.ComponentModel;
 
 namespace RomanDefrag
 {
+    public struct FileMapEntry
+    {
+        /// <summary>Virtual cluster number: relative offset within a file</summary>
+        public long Vcn;
+        /// <summary>Logical cluster number: relative offset within drive</summary>
+        public long Lcn;
+
+        public override string ToString() => $"VCN = {Vcn:#,0}, LCN = {Lcn:#,0}";
+    }
+
     public class IOWrapper
     {
 
@@ -204,7 +214,7 @@ namespace RomanDefrag
         ///     file to get the map for ex: "c:\windows\explorer.exe"</param>
         /// <returns>
         ///     An array of [virtual cluster, physical cluster]</returns>
-        static public Array GetFileMap(string path)
+        static public FileMapEntry[] GetFileMap(string path)
         {
             IntPtr hFile = IntPtr.Zero;
             IntPtr pAlloc = IntPtr.Zero;
@@ -265,19 +275,17 @@ namespace RomanDefrag
 
                 // now pDest points at an array of pairs of Int64s.
 
-                Array retVal = Array.CreateInstance(typeof(Int64), new int[2] { ExtentCount, 2 });
+                var result = new FileMapEntry[ExtentCount];
 
                 for (int i = 0; i < ExtentCount; i++)
                 {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        Int64 v = (Int64) Marshal.PtrToStructure(pDest, typeof(Int64));
-                        retVal.SetValue(v, new int[2] { i, j });
-                        pDest = (IntPtr) ((Int64) pDest + 8);
-                    }
+                    result[i].Vcn = (long) Marshal.PtrToStructure(pDest, typeof(long));
+                    pDest = (IntPtr) ((long) pDest + 8);
+                    result[i].Lcn = (long) Marshal.PtrToStructure(pDest, typeof(long));
+                    pDest = (IntPtr) ((long) pDest + 8);
                 }
 
-                return retVal;
+                return result;
             }
             finally
             {
