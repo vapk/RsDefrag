@@ -1,4 +1,6 @@
-﻿//
+﻿// Original source from https://blogs.msdn.microsoft.com/jeffrey_wall/2004/09/13/defrag-api-c-wrappers/
+
+//
 // a set of simple C# wrappers over the NT Defragmenter APIs
 //
 
@@ -26,10 +28,9 @@
 //
 
 using System;
-using System.Diagnostics;
 using System.Collections;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace RomanDefrag
 {
