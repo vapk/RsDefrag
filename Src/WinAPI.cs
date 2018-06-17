@@ -114,10 +114,11 @@ namespace RomanDefrag
 
 
         /// <summary>
-        /// Get cluster usage for a device
-        /// </summary>
-        /// <param name="DeviceName">use "c:"</param>
-        /// <returns>a bitarray for each cluster</returns>
+        ///     Get cluster usage for a device</summary>
+        /// <param name="DeviceName">
+        ///     use "c:"</param>
+        /// <returns>
+        ///     a bitarray for each cluster</returns>
         static public BitArray GetVolumeMap(string DeviceName)
         {
             IntPtr pAlloc = IntPtr.Zero;
@@ -197,11 +198,11 @@ namespace RomanDefrag
         }
 
         /// <summary>
-        /// returns a 2*number of extents array -
-        /// the vcn and the lcn as pairs
-        /// </summary>
-        /// <param name="path">file to get the map for ex: "c:\windows\explorer.exe" </param>
-        /// <returns>An array of [virtual cluster, physical cluster]</returns>
+        ///     returns a 2*number of extents array - the vcn and the lcn as pairs</summary>
+        /// <param name="path">
+        ///     file to get the map for ex: "c:\windows\explorer.exe"</param>
+        /// <returns>
+        ///     An array of [virtual cluster, physical cluster]</returns>
         static public Array GetFileMap(string path)
         {
             IntPtr hFile = IntPtr.Zero;
@@ -240,15 +241,15 @@ namespace RomanDefrag
 
                 /*
                 returned back one of...
-     typedef struct RETRIEVAL_POINTERS_BUFFER { 
-     DWORD ExtentCount; 
-     LARGE_INTEGER StartingVcn; 
-     struct {
-         LARGE_INTEGER NextVcn;
-      LARGE_INTEGER Lcn;
-        } Extents[1];
-     } RETRIEVAL_POINTERS_BUFFER, *PRETRIEVAL_POINTERS_BUFFER;
-    */
+                 typedef struct RETRIEVAL_POINTERS_BUFFER { 
+                 DWORD ExtentCount; 
+                 LARGE_INTEGER StartingVcn; 
+                 struct {
+                     LARGE_INTEGER NextVcn;
+                  LARGE_INTEGER Lcn;
+                    } Extents[1];
+                 } RETRIEVAL_POINTERS_BUFFER, *PRETRIEVAL_POINTERS_BUFFER;
+                */
 
                 Int32 ExtentCount = (Int32) Marshal.PtrToStructure(pDest, typeof(Int32));
 
@@ -286,9 +287,7 @@ namespace RomanDefrag
             }
         }
 
-        /// <summary>
-        /// input structure for use in MoveFile
-        /// </summary>
+        /// <summary>input structure for use in MoveFile</summary>
         private struct MoveFileData
         {
             public IntPtr hFile;
@@ -298,13 +297,17 @@ namespace RomanDefrag
         }
 
         /// <summary>
-        /// move a virtual cluster for a file to a logical cluster on disk, repeat for count clusters
-        /// </summary>
-        /// <param name="deviceName">device to move on"c:"</param>
-        /// <param name="path">file to muck with "c:\windows\explorer.exe"</param>
-        /// <param name="VCN">cluster number in file to move</param>
-        /// <param name="LCN">cluster on disk to move to</param>
-        /// <param name="count">for how many clusters</param>
+        ///     move a virtual cluster for a file to a logical cluster on disk, repeat for count clusters</summary>
+        /// <param name="deviceName">
+        ///     device to move on"c:"</param>
+        /// <param name="path">
+        ///     file to muck with "c:\windows\explorer.exe"</param>
+        /// <param name="VCN">
+        ///     cluster number in file to move</param>
+        /// <param name="LCN">
+        ///     cluster on disk to move to</param>
+        /// <param name="count">
+        ///     for how many clusters</param>
         static public void MoveFile(string deviceName, string path, Int64 VCN, Int64 LCN, Int32 count)
         {
             IntPtr hVol = IntPtr.Zero;
@@ -353,9 +356,7 @@ namespace RomanDefrag
     }
 
 
-    /// <summary>
-    /// constants lifted from winioctl.h from platform sdk
-    /// </summary>
+    /// <summary>constants lifted from winioctl.h from platform sdk</summary>
     internal class FSConstants
     {
         const uint FILE_DEVICE_FILE_SYSTEM = 0x00000009;
