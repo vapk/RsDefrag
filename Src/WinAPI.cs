@@ -128,7 +128,7 @@ namespace RomanDefrag
             {
                 hDevice = OpenVolume(DeviceName);
 
-                Int64 i64 = 0;
+                long i64 = 0;
 
                 GCHandle handle = GCHandle.Alloc(i64, GCHandleType.Pinned);
                 IntPtr p = handle.AddrOfPinnedObject();
@@ -167,21 +167,22 @@ namespace RomanDefrag
            BYTE Buffer[1];
           } VOLUME_BITMAP_BUFFER, *PVOLUME_BITMAP_BUFFER;
                 */
-                Int64 StartingLcn = (Int64) Marshal.PtrToStructure(pDest, typeof(Int64));
+                long StartingLcn = (long) Marshal.PtrToStructure(pDest, typeof(long));
 
-                Debug.Assert(StartingLcn == 0);
+                if (StartingLcn != 0)
+                    throw new InvalidOperationException();
 
-                pDest = (IntPtr) ((Int64) pDest + 8);
-                Int64 BitmapSize = (Int64) Marshal.PtrToStructure(pDest, typeof(Int64));
+                pDest = (IntPtr) ((long) pDest + 8);
+                long BitmapSize = (long) Marshal.PtrToStructure(pDest, typeof(long));
 
-                Int32 byteSize = (int) (BitmapSize / 8);
+                int byteSize = (int) (BitmapSize / 8);
                 byteSize++; // round up - even with no remainder
 
-                IntPtr BitmapBegin = (IntPtr) ((Int64) pDest + 8);
+                IntPtr BitmapBegin = (IntPtr) ((long) pDest + 8);
 
                 byte[] byteArr = new byte[byteSize];
 
-                Marshal.Copy(BitmapBegin, byteArr, 0, (Int32) byteSize);
+                Marshal.Copy(BitmapBegin, byteArr, 0, (int) byteSize);
 
                 BitArray retVal = new BitArray(byteArr);
                 retVal.Length = (int) BitmapSize; // truncate to exact cluster count
@@ -212,7 +213,7 @@ namespace RomanDefrag
             {
                 hFile = OpenFile(path);
 
-                Int64 i64 = 0;
+                long i64 = 0;
 
                 GCHandle handle = GCHandle.Alloc(i64, GCHandleType.Pinned);
                 IntPtr p = handle.AddrOfPinnedObject();
@@ -251,15 +252,16 @@ namespace RomanDefrag
                  } RETRIEVAL_POINTERS_BUFFER, *PRETRIEVAL_POINTERS_BUFFER;
                 */
 
-                Int32 ExtentCount = (Int32) Marshal.PtrToStructure(pDest, typeof(Int32));
+                int ExtentCount = (int) Marshal.PtrToStructure(pDest, typeof(int));
 
                 pDest = (IntPtr) ((Int64) pDest + 4);
 
-                Int64 StartingVcn = (Int64) Marshal.PtrToStructure(pDest, typeof(Int64));
+                long StartingVcn = (long) Marshal.PtrToStructure(pDest, typeof(long));
 
-                Debug.Assert(StartingVcn == 0);
+                if (StartingVcn != 0)
+                    throw new InvalidOperationException();
 
-                pDest = (IntPtr) ((Int64) pDest + 8);
+                pDest = (IntPtr) ((long) pDest + 8);
 
                 // now pDest points at an array of pairs of Int64s.
 
@@ -291,9 +293,9 @@ namespace RomanDefrag
         private struct MoveFileData
         {
             public IntPtr hFile;
-            public Int64 StartingVCN;
-            public Int64 StartingLCN;
-            public Int32 ClusterCount;
+            public long StartingVCN;
+            public long StartingLCN;
+            public int ClusterCount;
         }
 
         /// <summary>
@@ -308,7 +310,7 @@ namespace RomanDefrag
         ///     cluster on disk to move to</param>
         /// <param name="count">
         ///     for how many clusters</param>
-        static public void MoveFile(string deviceName, string path, Int64 VCN, Int64 LCN, Int32 count)
+        static public void MoveFile(string deviceName, string path, long VCN, long LCN, int count)
         {
             IntPtr hVol = IntPtr.Zero;
             IntPtr hFile = IntPtr.Zero;
