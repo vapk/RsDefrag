@@ -264,7 +264,7 @@ namespace RomanDefrag
 
                 int ExtentCount = (int) Marshal.PtrToStructure(pDest, typeof(int));
 
-                pDest = (IntPtr) ((Int64) pDest + 4);
+                pDest = (IntPtr) ((long) pDest + (Environment.Is64BitOperatingSystem ? 8 : 4));
 
                 long StartingVcn = (long) Marshal.PtrToStructure(pDest, typeof(long));
 
